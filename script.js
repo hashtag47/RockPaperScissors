@@ -1,82 +1,100 @@
 /** 1.Create computer controlled move */
-let computerChoice = 0;
 function getComputerChoice() {
-  computerChoice = Math.random();
-  let computer;
+  const computerChoice = Math.random();
   if (computerChoice >= 0.3 && computerChoice < 0.6) {
-    computer = "Scissor";
+    return "Scissor";
   } else if (computerChoice >= 0 && computerChoice < 0.3) {
-    computer = "Paper";
+    return "Paper";
   } else {
-    computer = "Rock";
+    return "Rock";
   }
-  return computer;
 }
-
-// console.log("Computer throws: " + getComputerChoice());
-
 /** 2.Create human controlled move */
-function getHumanChoice() {
-  let human = prompt("What is your strategy?");
-  return human;
-}
-
-// console.log("User throws: " + getHumanChoice());
+var humanChoice = "";
 
 /** 3.Initialize variables to record scores */
+var humanScore = 0;
+var computerScore = 0;
+var roundCount = 0;
+const maxRounds = 5;
+
 /** 4.Create function to play a single round */
-/** 5. Create function to play 5 rounds of the game*/
-function playGame() {
-  let humanScore = 0;
-  let computerScore = 0;
+function playRound(humanChoice, computerChoice) {
+  humanChoice = humanChoice.toLowerCase();
+  computerChoice = computerChoice.toLowerCase();
 
-  function playRound(humanChoice, computerChoice) {
-    humanChoice = humanChoice.toLowerCase();
-    computerChoice = computerChoice.toLowerCase();
-    if (humanChoice == "rock") {
-      if (computerChoice == "rock") {
-        console.log("Even! Both rock");
-      } else if (computerChoice == "paper") {
-        console.log("You win! Rock beats Paper");
-        humanScore += 1;
-      } else if (computerChoice == "scissor") {
-        console.log("You lose! Paper beats Rock");
-        computerScore += 1;
-      }
-    } else if (humanChoice == "paper") {
-      if (computerChoice == "rock") {
-        console.log("You win! Paper beats Rock");
-        humanScore += 1;
-      } else if (computerChoice == "paper") {
-        console.log("Even! Both Paper");
-      } else if (computerChoice == "scissor") {
-        console.log("You lose! Scissor beats Paper");
-        computerScore += 1;
-      }
-    } else if (humanChoice == "scissor") {
-      if (computerChoice == "rock") {
-        console.log("You lose! Rock beats Scissor");
-        computerScore += 1;
-      } else if (computerChoice == "paper") {
-        console.log("You win! Scissor beats Paper ");
-        humanScore += 1;
-      } else if (computerChoice == "scissor") {
-        console.log("Even! Both Scissor");
-      }
-    }
+  if (humanChoice === computerChoice) {
+    result.textContent = `Even! Both chose ${humanChoice}\nTotal user score: ${humanScore}, total computer score: ${computerScore}`;
+    result.style.whiteSpace = "pre-line";
+  } else if (
+    (humanChoice === "rock" && computerChoice === "scissor") ||
+    (humanChoice === "paper" && computerChoice === "rock") ||
+    (humanChoice === "scissor" && computerChoice === "paper")
+  ) {
+    humanScore += 1;
+    result.textContent = `You win! ${humanChoice} beats ${computerChoice}\nTotal user score: ${humanScore}, total computer score: ${computerScore}`;
+    result.style.whiteSpace = "pre-line";
+  } else {
+    computerScore += 1;
+    result.textContent = `You lose! ${computerChoice} beats ${humanChoice}\nTotal user score: ${humanScore}, total computer score: ${computerScore}`;
+    result.style.whiteSpace = "pre-line";
   }
+  roundCount += 1;
 
-  for (let i = 0; i < 5; i++) {
-    let humanSelection = getHumanChoice();
-    let computerSelection = getComputerChoice();
-    playRound(humanSelection, computerSelection);
-    console.log(
-      "Total user score: " +
-        humanScore +
-        ", total computer score: " +
-        computerScore
-    );
+  if (roundCount >= maxRounds) {
+    endGame();
   }
 }
 
-playGame();
+function endGame() {
+  let finalResult = "";
+  if (humanScore > computerScore) {
+    finalResult = "You won the contest! 🎉";
+  } else if (computerScore > humanScore) {
+    finalResult = "Computer won the contest! 😢";
+  } else {
+    finalResult = "It's a tie! 😐";
+  }
+
+  result.textContent = `\n${finalResult}`;
+  result.style.whiteSpace = "pre-line";
+
+  paperBtn.disabled = true;
+  rockBtn.disabled = true;
+  scissorBtn.disabled = true;
+}
+
+/** 5. Set up event listeners for buttons */
+const paperBtn = document.querySelector(".data-paper");
+const rockBtn = document.querySelector(".data-rock");
+const scissorBtn = document.querySelector(".data-scissor");
+const restartBtn = document.querySelector(".restart");
+const result = document.querySelector(".data-result");
+
+paperBtn.addEventListener("click", () => {
+  humanChoice = "paper";
+  const computerChoice = getComputerChoice();
+  playRound(humanChoice, computerChoice);
+});
+
+rockBtn.addEventListener("click", () => {
+  humanChoice = "rock";
+  const computerChoice = getComputerChoice();
+  playRound(humanChoice, computerChoice);
+});
+
+scissorBtn.addEventListener("click", () => {
+  humanChoice = "scissor";
+  const computerChoice = getComputerChoice();
+  playRound(humanChoice, computerChoice);
+});
+
+restartBtn.addEventListener("click", () => {
+  result.textContent = "";
+  roundCount = 0;
+  computerScore = 0;
+  humanScore = 0;
+  paperBtn.disabled = false;
+  rockBtn.disabled = false;
+  scissorBtn.disabled = false;
+});
