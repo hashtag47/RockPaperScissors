@@ -1,0 +1,30 @@
+.data-paper,
+.data-rock,
+.data-scissor,
+.restart {
+  width: 100px;
+  height: 40px;
+  border-style: none;
+  border-radius: 4px;
+  color: white;
+}
+
+.data-paper {
+  background-color: #000;
+  border: 2px solid #ef1;
+}
+
+.data-rock {
+  background-color: #000;
+  border: 2px solid #0ed;
+}
+
+.data-scissor {
+  background-color: #000;
+  border: 2px solid #e3d;
+}
+
+.restart {
+  background-color: #000;
+  border: 2px solid #f32;
+}
